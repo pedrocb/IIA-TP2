@@ -32,9 +32,10 @@ public class AStarAlgorithm : SearchAlgorithm {
 				foreach (Successor suc in sucessors) {
 					if (!closedSet.Contains (suc.state)) {
 						SearchNode new_node = new SearchNode (suc.state, suc.cost, problem.BoxesMissing(cur_node.state), suc.action, cur_node);			    
-						insertNode(new_node);
+						openList.Add (new_node);
 					}
 				}
+				openList.Sort (compareFunction);
 			}
 		}
 		else
@@ -43,7 +44,7 @@ public class AStarAlgorithm : SearchAlgorithm {
 			running = false;
 		}
 	}
-
+	/*
 	public void insertNode(SearchNode node){
 		for(int i=0;i<openList.Count;i++){
 			if(node.f<openList[i].f){
@@ -53,5 +54,15 @@ public class AStarAlgorithm : SearchAlgorithm {
 
 		}
 		openList.Add(node);
+	}
+	*/
+
+	private static int compareFunction(SearchNode a, SearchNode b)
+	{
+		if (a.f >= b.f) {
+			return 1;
+		} else {
+			return -1;
+		}
 	}
 }
