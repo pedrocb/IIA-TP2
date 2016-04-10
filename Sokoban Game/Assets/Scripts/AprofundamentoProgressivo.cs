@@ -4,14 +4,14 @@ using System.Collections.Generic;
 
 public class AprofundamentoProgressivo : SearchAlgorithm {
 
-	private List<SearchNode> nodeList = new List<SearchNode>();
+	private Stack<SearchNode> stack = new Stack<SearchNode>();
     private HashSet<object> closedSet = new HashSet<object> ();
     public int maximumDepth;
 	// Use this for initialization
 	void Start () {
 		problem = GameObject.Find ("Map").GetComponent<Map> ().GetProblem();
 		SearchNode start = new SearchNode (problem.GetStartState (), 0);
-		nodeList.Push(start);
+		stack.Push(start);
 	}
 
 	protected override void Step()
@@ -23,9 +23,9 @@ public class AprofundamentoProgressivo : SearchAlgorithm {
 
 	void depthFirstSearch()
 	{
-		if (nodeList.Count > 0)
+		if (stack.Count > 0)
 		    {
-			SearchNode cur_node = nodeList.Pop();
+			SearchNode cur_node = stack.Pop();
 			closedSet.Add (cur_node.state);
 
 			if (problem.IsGoal (cur_node.state)) {
@@ -38,7 +38,7 @@ public class AprofundamentoProgressivo : SearchAlgorithm {
 				if (!closedSet.Contains (suc.state)) {
 				    SearchNode new_node = new SearchNode (suc.state, suc.cost + cur_node.g, suc.action, cur_node);
 					//maximumDepth = maximumDepth - 1;
-				    nodeList.Push(new_node);
+				    stack.Push(new_node);
 				}
 			    }
 			}
