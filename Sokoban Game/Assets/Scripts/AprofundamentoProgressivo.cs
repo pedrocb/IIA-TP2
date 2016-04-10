@@ -16,34 +16,38 @@ public class AprofundamentoProgressivo : SearchAlgorithm {
 
 	protected override void Step()
 	{
-    	for(int i = 0; i < maximumDepth; i++){
-			if (stack.Count > 0)
-			    {
-				SearchNode cur_node = stack.Pop();
-				closedSet.Add (cur_node.state);
+		for(int i = 0; i < maximumDepth; i++){
+			depthFirstSearch();
+		}
+	}
 
-				if (problem.IsGoal (cur_node.state)) {
-				    solution = cur_node;
-				    finished = true;
-				    running = false;
-				} else if(cur_node.depth < maximumDepth){
-				    Successor[] sucessors = problem.GetSuccessors (cur_node.state);
-				    foreach (Successor suc in sucessors) {
-					if (!closedSet.Contains (suc.state)) {
-					    SearchNode new_node = new SearchNode (suc.state, suc.cost + cur_node.g, suc.action, cur_node);
-					    stack.Push(new_node);
-					}
-				    }
+	void depthFirstSearch()
+	{
+		if (stack.Count > 0)
+		    {
+			SearchNode cur_node = stack.Pop();
+			closedSet.Add (cur_node.state);
+
+			if (problem.IsGoal (cur_node.state)) {
+			    solution = cur_node;
+			    finished = true;
+			    running = false;
+			} else if(cur_node.depth < maximumDepth){
+			    Successor[] sucessors = problem.GetSuccessors (cur_node.state);
+			    foreach (Successor suc in sucessors) {
+				if (!closedSet.Contains (suc.state)) {
+				    SearchNode new_node = new SearchNode (suc.state, suc.cost + cur_node.g, suc.action, cur_node);
+					maximumDepth--;
+				    stack.Push(new_node);
 				}
 			    }
-			else
-			    {
-				finished = true;
-				running = false;
-			    }
+			}
 		    }
-
-
-	}
+		else
+		    {
+			finished = true;
+			running = false;
+		    }
+	    }
 
 }
