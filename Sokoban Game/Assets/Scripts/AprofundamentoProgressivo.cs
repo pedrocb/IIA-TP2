@@ -10,20 +10,25 @@ public class AprofundamentoProgressivo : SearchAlgorithm {
 	// Use this for initialization
 	void Start () {
 		problem = GameObject.Find ("Map").GetComponent<Map> ().GetProblem();
-		SearchNode start = new SearchNode (problem.GetStartState (), 0);
-		stack.Push(start);
+
 	}
 
 	protected override void Step()
 	{
-		for(int i = 0; i < maximumDepth; i++){
-			depthFirstSearch();
+		while(!depthFirstSearch()){
+			maximumDepth++;
 		}
+
 	}
 
-	void depthFirstSearch()
+	bool depthFirstSearch()
 	{
-		if (stack.Count > 0)
+		closedSet.Clear();
+		stack.Clear();
+
+		SearchNode start = new SearchNode (problem.GetStartState (), 0);
+		stack.Push(start);
+		while (stack.Count > 0)
 		    {
 			SearchNode cur_node = stack.Pop();
 			closedSet.Add (cur_node.state);
@@ -32,22 +37,24 @@ public class AprofundamentoProgressivo : SearchAlgorithm {
 			    solution = cur_node;
 			    finished = true;
 			    running = false;
+				return true;
 			} else if(cur_node.depth < maximumDepth){
 			    Successor[] sucessors = problem.GetSuccessors (cur_node.state);
 			    foreach (Successor suc in sucessors) {
 				if (!closedSet.Contains (suc.state)) {
 				    SearchNode new_node = new SearchNode (suc.state, suc.cost + cur_node.g, suc.action, cur_node);
-					//maximumDepth = maximumDepth - 1;
+
 				    stack.Push(new_node);
 				}
 			    }
 			}
 		    }
-		else
-		    {
+
 			finished = true;
 			running = false;
-		    }
+
+			return false;
 	    }
+
 
 }
