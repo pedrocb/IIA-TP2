@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class AStarAlgorithm : SearchAlgorithm {
 
+	public int heuristicNumber = 0;
     private List<SearchNode> openList = new List<SearchNode> ();
     private HashSet<object> closedSet = new HashSet<object> ();
 
@@ -31,9 +32,21 @@ public class AStarAlgorithm : SearchAlgorithm {
 		    foreach (Successor suc in sucessors) {
 			if (!closedSet.Contains (suc.state))
 					{
-			    //SearchNode new_node = new SearchNode (suc.state, suc.cost + cur_node.g, problem.BoxesMissing(suc.state), suc.action, cur_node);
-						SearchNode new_node = new SearchNode (suc.state, suc.cost + cur_node.g, problem.MataLifeHeuristic(suc.state), suc.action, cur_node);	
-						insertNode(new_node);
+
+						SearchNode new_node = null;
+						switch (heuristicNumber) {
+						case(0):
+							{
+								new_node = new SearchNode (suc.state, suc.cost + cur_node.g, problem.BoxesMissing(suc.state), suc.action, cur_node);
+								break;
+							}
+						case(1):
+							{
+								new_node = new SearchNode (suc.state, suc.cost + cur_node.g, problem.DistanceHeuristic(suc.state), suc.action, cur_node);
+								break;
+							}
+						}
+					insertNode(new_node);
 			}
 		    }
 		}
