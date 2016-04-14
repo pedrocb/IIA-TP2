@@ -29,5 +29,6 @@ public interface ISearchProblem
     int GetExpanded ();
 
 	float DistanceHeuristic (object state);
+
+    float MataLifeHeuristic(object state);
 }
- 

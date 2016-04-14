@@ -27,7 +27,7 @@ public class SokobanState {
     // Compare two states. Consider that each crate is in the same index in the array for the two states.
     public override bool Equals(System.Object obj)
     {
-	if (obj == null) 
+	if (obj == null)
 	    {
 		return false;
 	    }
@@ -41,7 +41,7 @@ public class SokobanState {
 	if (player != s.player) {
 	    return false;
 	}
-			
+
 	for (int i = 0; i < crates.Count; i++)
 	    {
 		if (crates[i] != s.crates[i])
@@ -55,7 +55,7 @@ public class SokobanState {
 
     public bool Equals(SokobanState s)
     {
-	if ((System.Object)s == null) 
+	if ((System.Object)s == null)
 	    {
 		return false;
 	    }
@@ -153,11 +153,13 @@ public class SokobanProblem : ISearchProblem {
 	return false;
     }
 
+
+
     public int BoxesMissing(object state)
     {
 		SokobanState s = (SokobanState)state;
 		int remainingGoals = goals.Count;
-		
+
 		foreach (Vector2 crate in s.crates) {
 		    if (goals.Contains (crate)) {
 			remainingGoals--;
@@ -175,7 +177,7 @@ public class SokobanProblem : ISearchProblem {
 			float closestDistance = distanceTwoPoints (closestGoal.x, closestGoal.y, crate.x, crate.y);
 			foreach(Vector2 goal in goals)
 			{
-				float distance = distanceTwoPoints (goal.x, goal.y, crate.x, crate.y); 
+				float distance = distanceTwoPoints (goal.x, goal.y, crate.x, crate.y);
 				if (distance < closestDistance) {
 					closestDistance = distance;
 					closestGoal = goal;
@@ -184,6 +186,20 @@ public class SokobanProblem : ISearchProblem {
 			sum += closestDistance;
 		}
 		return sum;
+	}
+
+	public float MataLifeHeuristic(object state)
+	{
+		SokobanState s = (SokobanState)state;
+		float aux = 0;
+		foreach (Vector2 crate in s.crates){
+			float closestDistance = distanceTwoPoints(s.player.x, s.player.y, crate.x, crate.y);
+			if(closestDistance > aux){
+				aux = closestDistance;
+			}
+		}
+		return aux;
+
 	}
 
 	public float distanceTwoPoints(float x1, float y1, float x2, float y2)
@@ -217,7 +233,7 @@ public class SokobanProblem : ISearchProblem {
 			    break;
 			}
 		    }
-					
+
 		    result.Add (new Successor (new_state, 1f, a));
 		}
 	}
@@ -261,4 +277,3 @@ public class SokobanProblem : ISearchProblem {
 	return true;
     }
 }
-
