@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class GreedySearch : SearchAlgorithm {
 
+	public int heuristicNumber = 0;
     private List<SearchNode> openList = new List<SearchNode> ();
     private HashSet<object> closedSet = new HashSet<object> ();
 
@@ -30,7 +31,19 @@ public class GreedySearch : SearchAlgorithm {
 		    Successor[] sucessors = problem.GetSuccessors (cur_node.state);
 		    foreach (Successor suc in sucessors) {
 			if (!closedSet.Contains (suc.state)) {
-			    SearchNode new_node = new SearchNode (suc.state, problem.BoxesMissing(suc.state) , suc.action, cur_node);
+						SearchNode new_node = null;
+						switch (heuristicNumber) {
+						case(0):
+							{
+								new_node = new SearchNode (suc.state, problem.BoxesMissing (suc.state), suc.action, cur_node);
+								break;
+							}
+						case(1):
+							{
+								new_node = new SearchNode (suc.state, problem.DistanceHeuristic (suc.state), suc.action, cur_node);
+								break;
+							}
+						}
 			    insertNode(new_node);
 			}
 		    }
