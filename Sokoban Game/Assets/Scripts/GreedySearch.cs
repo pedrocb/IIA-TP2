@@ -30,7 +30,7 @@ public class GreedySearch : SearchAlgorithm {
 		    Successor[] sucessors = problem.GetSuccessors (cur_node.state);
 		    foreach (Successor suc in sucessors) {
 			if (!closedSet.Contains (suc.state)) {
-			    SearchNode new_node = new SearchNode (suc.state, suc.cost + cur_node.g, suc.action, cur_node);
+			    SearchNode new_node = new SearchNode (suc.state, problem.BoxesMissing(suc.state) , suc.action, cur_node);
 			    insertNode(new_node);
 			}
 		    }
@@ -45,7 +45,7 @@ public class GreedySearch : SearchAlgorithm {
 
     public void insertNode(SearchNode node){
 	for(int i=0;i<openList.Count;i++){
-	    if(problem.BoxesMissing(node.state)<problem.BoxesMissing(openList[i].state)){
+	    if(node.g<openList[i].g){
 		openList.Insert(i,node);
 		return;
 	    }
