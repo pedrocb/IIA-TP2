@@ -173,17 +173,18 @@ public class SokobanProblem : ISearchProblem {
 		SokobanState s = (SokobanState)state;
 		float sum = 0;
 		foreach (Vector2 crate in s.crates) {
-			Vector2 closestGoal = goals[0];
-			float closestDistance = distanceTwoPoints (closestGoal.x, closestGoal.y, crate.x, crate.y);
-			foreach(Vector2 goal in goals)
-			{
-				float distance = distanceTwoPoints (goal.x, goal.y, crate.x, crate.y);
-				if (distance < closestDistance) {
-					closestDistance = distance;
-					closestGoal = goal;
+			if (goals.Count > 0) {
+				Vector2 closestGoal = goals [0];
+				float closestDistance = distanceTwoPoints (closestGoal.x, closestGoal.y, crate.x, crate.y);
+				foreach (Vector2 goal in goals) {
+					float distance = distanceTwoPoints (goal.x, goal.y, crate.x, crate.y);
+					if (distance < closestDistance) {
+						closestDistance = distance;
+						closestGoal = goal;
+					}
 				}
+				sum += closestDistance;
 			}
-			sum += closestDistance;
 		}
 		return sum;
 	}
