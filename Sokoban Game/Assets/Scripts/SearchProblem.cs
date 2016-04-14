@@ -11,10 +11,10 @@ public struct Successor
 
     public Successor(object state, float cost, Action a)
     {
-	this.state = state;
-	this.cost = cost;
-	this.action = a;
-    }
+       this.state = state;
+       this.cost = cost;
+       this.action = a;
+   }
 }
 
 
@@ -28,7 +28,7 @@ public interface ISearchProblem
     int GetVisited ();
     int GetExpanded ();
 
-	float DistanceHeuristic (object state);
+    float DistanceHeuristic (object state);
 
     float MataLifeHeuristic(object state);
 }
