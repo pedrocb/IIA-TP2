@@ -155,16 +155,41 @@ public class SokobanProblem : ISearchProblem {
 
     public int BoxesMissing(object state)
     {
-	SokobanState s = (SokobanState)state;
-	int remainingGoals = goals.Count;
-	
-	foreach (Vector2 crate in s.crates) {
-	    if (goals.Contains (crate)) {
-		remainingGoals--;
-	    }
-	}
-	return remainingGoals;
+		SokobanState s = (SokobanState)state;
+		int remainingGoals = goals.Count;
+		
+		foreach (Vector2 crate in s.crates) {
+		    if (goals.Contains (crate)) {
+			remainingGoals--;
+		    }
+		}
+		return remainingGoals;
     }
+
+	public float DistanceHeuristic(object state)
+	{
+		SokobanState s = (SokobanState)state;
+		float sum = 0;
+		foreach (Vector2 crate in s.crates) {
+			Vector2 closestGoal = goals[0];
+			float closestDistance = distanceTwoPoints (closestGoal.x, closestGoal.y, crate.x, crate.y);
+			foreach(Vector2 goal in goals)
+			{
+				float distance = distanceTwoPoints (goal.x, goal.y, crate.x, crate.y); 
+				if (distance < closestDistance) {
+					closestDistance = distance;
+					closestGoal = goal;
+				}
+			}
+			sum += closestDistance;
+		}
+		return sum;
+	}
+
+	public float distanceTwoPoints(float x1, float y1, float x2, float y2)
+	{
+		return (Mathf.Sqrt(Mathf.Pow(x2-x1, 2) + Mathf.Pow(y2-y1, 2)));
+	}
 
 
     public Successor[] GetSuccessors(object state)
