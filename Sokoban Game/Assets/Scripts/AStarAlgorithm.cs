@@ -29,9 +29,11 @@ public class AStarAlgorithm : SearchAlgorithm {
 		} else {
 		    Successor[] sucessors = problem.GetSuccessors (cur_node.state);
 		    foreach (Successor suc in sucessors) {
-			if (!closedSet.Contains (suc.state)) {
-			    SearchNode new_node = new SearchNode (suc.state, suc.cost + cur_node.g, problem.BoxesMissing(suc.state), suc.action, cur_node);	
-			    insertNode(new_node);
+			if (!closedSet.Contains (suc.state)) 
+					{
+			    //SearchNode new_node = new SearchNode (suc.state, suc.cost + cur_node.g, problem.BoxesMissing(suc.state), suc.action, cur_node);	
+						SearchNode new_node = new SearchNode (suc.state, suc.cost + cur_node.g, problem.DistanceHeuristic(suc.state), suc.action, cur_node);	
+						insertNode(new_node);
 			}
 		    }
 		}

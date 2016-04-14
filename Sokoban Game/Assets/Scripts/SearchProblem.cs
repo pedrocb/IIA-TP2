@@ -27,5 +27,7 @@ public interface ISearchProblem
 
     int GetVisited ();
     int GetExpanded ();
+
+	float DistanceHeuristic (object state);
 }
  
