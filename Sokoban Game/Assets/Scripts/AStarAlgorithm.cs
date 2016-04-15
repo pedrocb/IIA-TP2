@@ -32,7 +32,7 @@ public class AStarAlgorithm : SearchAlgorithm {
 			if (!closedSet.Contains (suc.state)) 
 					{
 			    //SearchNode new_node = new SearchNode (suc.state, suc.cost + cur_node.g, problem.BoxesMissing(suc.state), suc.action, cur_node);	
-						SearchNode new_node = new SearchNode (suc.state, suc.cost + cur_node.g, problem.DistanceHeuristic(suc.state), suc.action, cur_node);	
+					    SearchNode new_node = new SearchNode (suc.state, suc.cost + cur_node.g, problem.BoxesMissing(suc.state), suc.action, cur_node);	
 						insertNode(new_node);
 			}
 		    }

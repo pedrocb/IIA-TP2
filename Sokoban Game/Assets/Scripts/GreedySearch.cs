@@ -45,7 +45,7 @@ public class GreedySearch : SearchAlgorithm {
 
     public void insertNode(SearchNode node){
 	for(int i=0;i<openList.Count;i++){
-	    if(node.g<openList[i].g){
+	    if(node.g<=openList[i].g){
 		openList.Insert(i,node);
 		return;
 	    }

@@ -28,6 +28,8 @@ public interface ISearchProblem
     int GetVisited ();
     int GetExpanded ();
 
-	float DistanceHeuristic (object state);
+    float DistanceToCrateClosestToGoal(object state);
+	
+    float DistanceHeuristic (object state);
 }
  

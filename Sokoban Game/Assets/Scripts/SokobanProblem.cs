@@ -124,6 +124,7 @@ public class SokobanState {
 
 public class SokobanProblem : ISearchProblem {
     private bool[,] walls;
+    private List<Vector2> corners;
     private List<Vector2> goals;
     private SokobanState start_state;
     private Action[] allActions = Actions.GetAll();
@@ -135,7 +136,7 @@ public class SokobanProblem : ISearchProblem {
     {
 	walls = map.GetWalls ();
 	goals = map.GetGoals ();
-
+	corners = map.GetCorners();
 	List<Vector2> crates_copy = new List<Vector2> (map.GetCrates ());
 	start_state = new SokobanState (crates_copy, map.GetPlayerStart());
     }
@@ -155,41 +156,62 @@ public class SokobanProblem : ISearchProblem {
 
     public int BoxesMissing(object state)
     {
-		SokobanState s = (SokobanState)state;
-		int remainingGoals = goals.Count;
+	SokobanState s = (SokobanState)state;
+	int remainingGoals = goals.Count;
 		
-		foreach (Vector2 crate in s.crates) {
-		    if (goals.Contains (crate)) {
-			remainingGoals--;
-		    }
-		}
-		return remainingGoals;
+	foreach (Vector2 crate in s.crates) {
+	    if (goals.Contains (crate)) {
+		remainingGoals--;
+	    }
+	}
+	return remainingGoals;
     }
 
-	public float DistanceHeuristic(object state)
-	{
-		SokobanState s = (SokobanState)state;
-		float sum = 0;
-		foreach (Vector2 crate in s.crates) {
-			Vector2 closestGoal = goals[0];
-			float closestDistance = distanceTwoPoints (closestGoal.x, closestGoal.y, crate.x, crate.y);
-			foreach(Vector2 goal in goals)
-			{
-				float distance = distanceTwoPoints (goal.x, goal.y, crate.x, crate.y); 
-				if (distance < closestDistance) {
-					closestDistance = distance;
-					closestGoal = goal;
-				}
-			}
-			sum += closestDistance;
+    public float DistanceHeuristic(object state)
+    {
+	SokobanState s = (SokobanState)state;
+	float sum = 0;
+	foreach (Vector2 crate in s.crates) {
+	    Vector2 closestGoal = goals[0];
+	    float closestDistance = distanceTwoPoints (closestGoal.x, closestGoal.y, crate.x, crate.y);
+	    foreach(Vector2 goal in goals)
+		{
+		    float distance = distanceTwoPoints (goal.x, goal.y, crate.x, crate.y); 
+		    if (distance < closestDistance) {
+			closestDistance = distance;
+			closestGoal = goal;
+		    }
 		}
-		return sum;
+	    sum += closestDistance;
 	}
+	return sum;
+    }
+    
+    public float DistanceToCrateClosestToGoal(object state)
+    {
+	SokobanState s = (SokobanState)state;
+	float closestCrateToWinDistance = -1;
+	Vector2 bestCrate = new Vector2(s.player.x,s.player.y);
+	foreach (Vector2 crate in s.crates) {
+	    foreach(Vector2 goal in goals){
+		if(!goals.Contains(crate)){
+		    
+		    float distance = distanceTwoPoints (goal.x, goal.y, crate.x, crate.y); 
+		    if (distance < closestCrateToWinDistance || closestCrateToWinDistance == -1) {
+			closestCrateToWinDistance = distance;
+			bestCrate = crate;
+		    }
+		}
+	    }
+	}
+	return distanceTwoPoints(s.player.x,s.player.y,bestCrate.x,bestCrate.y);
+	
+    }
 
-	public float distanceTwoPoints(float x1, float y1, float x2, float y2)
-	{
-		return (Mathf.Sqrt(Mathf.Pow(x2-x1, 2) + Mathf.Pow(y2-y1, 2)));
-	}
+    public float distanceTwoPoints(float x1, float y1, float x2, float y2)
+    {
+	return (Mathf.Sqrt(Mathf.Pow(x2-x1, 2) + Mathf.Pow(y2-y1, 2)));
+    }
 
 
     public Successor[] GetSuccessors(object state)
@@ -248,7 +270,7 @@ public class SokobanProblem : ISearchProblem {
 	int index = state.crates.IndexOf(new_pos);
 	if (index != -1) {
 	    Vector2 new_crate_pos = state.crates [index] + movement;
-
+	    
 	    if (walls [(int)new_crate_pos.y, (int)new_crate_pos.x]) {
 		return false;
 	    }
@@ -256,9 +278,14 @@ public class SokobanProblem : ISearchProblem {
 	    if (state.crates.Contains(new_crate_pos)) {
 		return false;
 	    }
+	    if(!goals.Contains(new_crate_pos)){
+		if(corners.Contains(new_crate_pos)){
+		    return false;
+		}
+		
+	    }
 	}
-
 	return true;
     }
-}
 
+}

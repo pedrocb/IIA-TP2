@@ -92,7 +92,7 @@ public abstract class SearchAlgorithm : MonoBehaviour {
 			path.Insert (0, node.action);
 			node = node.parent;
 		}
-
+		
 		return path;
 	}
 }
