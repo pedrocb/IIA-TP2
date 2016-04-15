@@ -128,11 +128,14 @@ public class SokobanProblem : ISearchProblem {
     private List<Vector2> corners;
     private SokobanState start_state;
     private Action[] allActions = Actions.GetAll();
-
-    
+    private float currentMin;
+    private float[,] distances;
+    private bool []goalsChecked;
+    private int[] combination;
+    private int nCrates;
     private int visited = 0;
     private int expanded = 0;
-
+    
     public SokobanProblem(Map map)
     {
 	walls = map.GetWalls ();
@@ -141,7 +144,7 @@ public class SokobanProblem : ISearchProblem {
 	List<Vector2> crates_copy = new List<Vector2> (map.GetCrates ());
 	start_state = new SokobanState (crates_copy, map.GetPlayerStart());
     }
-
+    
     public object GetStartState()
     {
 	return start_state;
@@ -209,11 +212,60 @@ public class SokobanProblem : ISearchProblem {
 	
     }
     
+    public float DistanceHeuristicBetter(object state){
+	SokobanState s = (SokobanState)state;
+	nCrates = s.crates.Count;
+	distances = new float[nCrates,nCrates];
+	for(int crate = 0;crate<nCrates;crate++){
+	    for(int goal = 0;goal<nCrates;goal++){
+		distances[crate,goal] = distanceTwoPoints(s.crates[crate].x,s.crates[crate].y,goals[goal].x,goals[goal].y);
+	    }
+	}
+	goalsChecked = new bool[nCrates];
+	combination = new int[nCrates];
+	currentMin = -1;
+	for(int goal = 0;goal<nCrates;goal++){
+	    combination[0] = goal;
+	    goalsChecked[goal] = true;
+	    recursive(1);
+	    goalsChecked[goal] = false;
+	}
+	return currentMin;
+	
+	
+    }
+    
+    public void recursive(int currentCrate){
+	if(currentCrate == nCrates){
+	    float sum = 0;
+	    for(int i = 0;i<nCrates;i++){
+		sum+=distances[i,combination[i]];
+	    }
+	    if(currentMin == -1 || sum < currentMin){
+		currentMin = sum;
+	    }
+	    return;
+	}
+	for(int i=0;i<nCrates;i++){
+	    if(goalsChecked[i]){
+		continue;
+	    }
+	    else{
+		goalsChecked[i]=true;
+		combination[currentCrate]=i;
+		recursive(currentCrate+1);
+		goalsChecked[i]=false;
+	    }
+	}
+	return;
+    }
+	
+   
     public float distanceTwoPoints(float x1, float y1, float x2, float y2)
     {
 	return (Mathf.Sqrt(Mathf.Pow(x2-x1, 2) + Mathf.Pow(y2-y1, 2)));
     }
-
+    
     public float MataLifeHeuristic(object state)
     {
 	SokobanState s = (SokobanState)state;
@@ -225,7 +277,7 @@ public class SokobanProblem : ISearchProblem {
 	    }
 	}
 	return aux;
-		
+	
     }
     
     

@@ -22,7 +22,7 @@ public class AStarAlgorithm : SearchAlgorithm {
 		SearchNode cur_node = openList[0];
 		openList.RemoveAt(0);
 		closedSet.Add (cur_node.state);
-
+		
 		if (problem.IsGoal (cur_node.state)) {
 		    solution = cur_node;
 		    finished = true;
@@ -52,8 +52,17 @@ public class AStarAlgorithm : SearchAlgorithm {
 				    }
 				    
 				case(3):
-				    new_node= new SearchNode (suc.state, suc.cost + cur_node.g, problem.DistanceToCrateClosestToGoal(suc.state), suc.action, cur_node);
-				    break;
+				    {
+				   
+ 					new_node= new SearchNode (suc.state, suc.cost + cur_node.g, problem.DistanceToCrateClosestToGoal(suc.state), suc.action, cur_node);
+					break;
+				    }
+				case(4):
+				    {
+					
+					new_node= new SearchNode (suc.state, suc.cost + cur_node.g, problem.DistanceHeuristicBetter(suc.state), suc.action, cur_node);
+					break;
+				    }
 				}
 				insertNode(new_node);
 			    }

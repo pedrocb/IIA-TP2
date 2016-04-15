@@ -53,6 +53,12 @@ public class GreedySearch : SearchAlgorithm {
 				    new_node= new SearchNode (suc.state, problem.DistanceToCrateClosestToGoal(suc.state), suc.action, cur_node);
 				    break;
 				}
+			    case(4):
+				{
+				    
+				    new_node= new SearchNode (suc.state, problem.DistanceHeuristicBetter(suc.state), suc.action, cur_node);
+				    break;
+				}
 				
 			    }
 			    insertNode(new_node);

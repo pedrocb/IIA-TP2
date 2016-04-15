@@ -32,5 +32,7 @@ public interface ISearchProblem
 	
     float DistanceHeuristic (object state);
 
+    float DistanceHeuristicBetter (object state);
+
     float MataLifeHeuristic(object state);
 }
