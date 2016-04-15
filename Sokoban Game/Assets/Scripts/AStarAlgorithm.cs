@@ -4,10 +4,11 @@ using System.Collections.Generic;
 
 public class AStarAlgorithm : SearchAlgorithm {
 
+    public int heuristicNumber = 0;
     private List<SearchNode> openList = new List<SearchNode> ();
     private HashSet<object> closedSet = new HashSet<object> ();
 
-    void Start () 
+    void Start ()
     {
 	problem = GameObject.Find ("Map").GetComponent<Map> ().GetProblem();
 	SearchNode start = new SearchNode (problem.GetStartState (), 0);
@@ -29,12 +30,35 @@ public class AStarAlgorithm : SearchAlgorithm {
 		} else {
 		    Successor[] sucessors = problem.GetSuccessors (cur_node.state);
 		    foreach (Successor suc in sucessors) {
-			if (!closedSet.Contains (suc.state)) 
-					{
-			    //SearchNode new_node = new SearchNode (suc.state, suc.cost + cur_node.g, problem.BoxesMissing(suc.state), suc.action, cur_node);	
-					    SearchNode new_node = new SearchNode (suc.state, suc.cost + cur_node.g, problem.BoxesMissing(suc.state), suc.action, cur_node);	
-						insertNode(new_node);
-			}
+			if (!closedSet.Contains (suc.state))
+			    {
+					    
+				SearchNode new_node = null;
+				switch (heuristicNumber) {
+				case(0):
+				    {
+					new_node = new SearchNode (suc.state, suc.cost + cur_node.g, problem.BoxesMissing(suc.state), suc.action, cur_node);
+					break;
+				    }
+				case(1):
+				    {
+					new_node = new SearchNode (suc.state, suc.cost + cur_node.g, problem.DistanceHeuristic(suc.state), suc.action, cur_node);
+					break;
+				    }
+				case(2):
+				    {
+					new_node = new SearchNode (suc.state, suc.cost + cur_node.g, problem.MataLifeHeuristic(suc.state), suc.action, cur_node);
+					break;
+				    }
+				    
+				case(3):
+				    {
+					new_node= new SearchNode (suc.state, suc.cost + cur_node.g, problem.DistanceToCrateClosestToGoal(suc.state), suc.action, cur_node);
+					break;
+				    }
+				}
+				insertNode(new_node);
+			    }
 		    }
 		}
 	    }
@@ -44,8 +68,8 @@ public class AStarAlgorithm : SearchAlgorithm {
 		running = false;
 	    }
     }
-		
-    
+
+
     public void insertNode(SearchNode node){
 	for(int i=0;i<openList.Count;i++){
 	    if(node.f<openList[i].f){

@@ -27,7 +27,7 @@ public class SokobanState {
     // Compare two states. Consider that each crate is in the same index in the array for the two states.
     public override bool Equals(System.Object obj)
     {
-	if (obj == null) 
+	if (obj == null)
 	    {
 		return false;
 	    }
@@ -41,7 +41,7 @@ public class SokobanState {
 	if (player != s.player) {
 	    return false;
 	}
-			
+
 	for (int i = 0; i < crates.Count; i++)
 	    {
 		if (crates[i] != s.crates[i])
@@ -55,7 +55,7 @@ public class SokobanState {
 
     public bool Equals(SokobanState s)
     {
-	if ((System.Object)s == null) 
+	if ((System.Object)s == null)
 	    {
 		return false;
 	    }
@@ -124,11 +124,12 @@ public class SokobanState {
 
 public class SokobanProblem : ISearchProblem {
     private bool[,] walls;
-    private List<Vector2> corners;
     private List<Vector2> goals;
+    private List<Vector2> corners;
     private SokobanState start_state;
     private Action[] allActions = Actions.GetAll();
 
+    
     private int visited = 0;
     private int expanded = 0;
 
@@ -201,23 +202,38 @@ public class SokobanProblem : ISearchProblem {
 			closestCrateToWinDistance = distance;
 			bestCrate = crate;
 		    }
+		    
 		}
 	    }
 	}
 	return distanceTwoPoints(s.player.x,s.player.y,bestCrate.x,bestCrate.y);
 	
     }
-
+    
     public float distanceTwoPoints(float x1, float y1, float x2, float y2)
     {
 	return (Mathf.Sqrt(Mathf.Pow(x2-x1, 2) + Mathf.Pow(y2-y1, 2)));
     }
-
-
+    public float MataLifeHeuristic(object state)
+    {
+	SokobanState s = (SokobanState)state;
+	float aux = 0;
+	foreach (Vector2 crate in s.crates){
+	    float closestDistance = distanceTwoPoints(s.player.x, s.player.y, crate.x, crate.y);
+	    if(closestDistance > aux){
+		aux = closestDistance;
+	    }
+	}
+	return aux;
+		
+    }
+    
+    
+    
     public Successor[] GetSuccessors(object state)
     {
 	SokobanState s = (SokobanState)state;
-
+	
 	visited++;
 
 	List<Successor> result = new List<Successor> ();
@@ -239,7 +255,7 @@ public class SokobanProblem : ISearchProblem {
 			    break;
 			}
 		    }
-					
+
 		    result.Add (new Successor (new_state, 1f, a));
 		}
 	}

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class GreedySearch : SearchAlgorithm {
 
+    public int heuristicNumber = 0;
     private List<SearchNode> openList = new List<SearchNode> ();
     private HashSet<object> closedSet = new HashSet<object> ();
 
@@ -30,7 +31,30 @@ public class GreedySearch : SearchAlgorithm {
 		    Successor[] sucessors = problem.GetSuccessors (cur_node.state);
 		    foreach (Successor suc in sucessors) {
 			if (!closedSet.Contains (suc.state)) {
-			    SearchNode new_node = new SearchNode (suc.state, problem.BoxesMissing(suc.state) , suc.action, cur_node);
+			    SearchNode new_node = null;
+			    switch (heuristicNumber) {
+			    case(0):
+				{
+				    new_node = new SearchNode (suc.state, problem.BoxesMissing (suc.state), suc.action, cur_node);
+				    break;
+				}
+			    case(1):
+				{
+				    new_node = new SearchNode (suc.state, problem.DistanceHeuristic (suc.state), suc.action, cur_node);
+				    break;
+				}
+			    case(2):
+				{
+				    new_node = new SearchNode (suc.state, suc.cost + cur_node.g, problem.MataLifeHeuristic(suc.state), suc.action, cur_node);
+				    break;
+				}
+			    case(3):
+				{
+				    new_node= new SearchNode (suc.state, suc.cost + cur_node.g, problem.DistanceToCrateClosestToGoal(suc.state), suc.action, cur_node);
+				    break;
+				}
+
+			    }
 			    insertNode(new_node);
 			}
 		    }
@@ -45,11 +69,11 @@ public class GreedySearch : SearchAlgorithm {
 
     public void insertNode(SearchNode node){
 	for(int i=0;i<openList.Count;i++){
-	    if(node.g<=openList[i].g){
+	    if(node.g<openList[i].g){
 		openList.Insert(i,node);
 		return;
 	    }
-
+	    
 	}
 	openList.Add(node);
     }
