@@ -52,10 +52,8 @@ public class AStarAlgorithm : SearchAlgorithm {
 				    }
 				    
 				case(3):
-				    {
-					new_node= new SearchNode (suc.state, suc.cost + cur_node.g, problem.DistanceToCrateClosestToGoal(suc.state), suc.action, cur_node);
-					break;
-				    }
+				    new_node= new SearchNode (suc.state, suc.cost + cur_node.g, problem.DistanceToCrateClosestToGoal(suc.state), suc.action, cur_node);
+				    break;
 				}
 				insertNode(new_node);
 			    }

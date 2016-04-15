@@ -8,7 +8,6 @@ public class SokobanState {
     public List<Vector2> crates;
     public Vector2 player;
 
-
     public SokobanState(List<Vector2> crates, Vector2 player)
     {
 	this.crates = crates;
@@ -21,6 +20,7 @@ public class SokobanState {
 	if (other != null) {
 	    this.crates = new List<Vector2> (other.crates);
 	    this.player = other.player;
+	    
 	}
     }
 
@@ -192,11 +192,10 @@ public class SokobanProblem : ISearchProblem {
     {
 	SokobanState s = (SokobanState)state;
 	float closestCrateToWinDistance = -1;
-	Vector2 bestCrate = new Vector2(s.player.x,s.player.y);
+	Vector2 bestCrate = new Vector2(s.player.x,s.player.y);    
 	foreach (Vector2 crate in s.crates) {
 	    foreach(Vector2 goal in goals){
 		if(!goals.Contains(crate)){
-		    
 		    float distance = distanceTwoPoints (goal.x, goal.y, crate.x, crate.y); 
 		    if (distance < closestCrateToWinDistance || closestCrateToWinDistance == -1) {
 			closestCrateToWinDistance = distance;
@@ -214,6 +213,7 @@ public class SokobanProblem : ISearchProblem {
     {
 	return (Mathf.Sqrt(Mathf.Pow(x2-x1, 2) + Mathf.Pow(y2-y1, 2)));
     }
+
     public float MataLifeHeuristic(object state)
     {
 	SokobanState s = (SokobanState)state;
@@ -237,25 +237,25 @@ public class SokobanProblem : ISearchProblem {
 	visited++;
 
 	List<Successor> result = new List<Successor> ();
-
+	
 	foreach (Action a in allActions) {
 	    Vector2 movement = Actions.GetVector (a);
-
+	    
 	    if (CheckRules(s, movement))
 		{
 		    expanded++;
-
+		    
 		    SokobanState new_state = new SokobanState (s);
-
+		    
 		    new_state.player += movement;
-
+		    
 		    for (int i = 0; i < new_state.crates.Count; i++) {
 			if (new_state.crates[i] == new_state.player) {
 			    new_state.crates[i] += movement;
 			    break;
 			}
 		    }
-
+		    
 		    result.Add (new Successor (new_state, 1f, a));
 		}
 	}

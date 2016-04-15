@@ -45,15 +45,15 @@ public class GreedySearch : SearchAlgorithm {
 				}
 			    case(2):
 				{
-				    new_node = new SearchNode (suc.state, suc.cost + cur_node.g, problem.MataLifeHeuristic(suc.state), suc.action, cur_node);
+				    new_node = new SearchNode (suc.state, problem.MataLifeHeuristic(suc.state), suc.action, cur_node);
 				    break;
 				}
 			    case(3):
 				{
-				    new_node= new SearchNode (suc.state, suc.cost + cur_node.g, problem.DistanceToCrateClosestToGoal(suc.state), suc.action, cur_node);
+				    new_node= new SearchNode (suc.state, problem.DistanceToCrateClosestToGoal(suc.state), suc.action, cur_node);
 				    break;
 				}
-
+				
 			    }
 			    insertNode(new_node);
 			}
@@ -69,7 +69,7 @@ public class GreedySearch : SearchAlgorithm {
 
     public void insertNode(SearchNode node){
 	for(int i=0;i<openList.Count;i++){
-	    if(node.g<openList[i].g){
+	    if(node.g<=openList[i].g){
 		openList.Insert(i,node);
 		return;
 	    }
