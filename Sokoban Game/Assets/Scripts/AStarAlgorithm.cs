@@ -61,6 +61,12 @@ public class AStarAlgorithm : SearchAlgorithm {
 					new_node= new SearchNode (suc.state, suc.cost + cur_node.g, problem.DistanceHeuristicBetter(suc.state), suc.action, cur_node);
 					break;
 				    }
+				case(5):
+				    {
+					
+					new_node= new SearchNode (suc.state, suc.cost + cur_node.g, problem.ClosestDistanceHeuristic(suc.state), suc.action, cur_node);
+					break;
+				    }
 				}
 				queue.Add(new_node.f,new_node);
 			    }
@@ -76,14 +82,14 @@ public class AStarAlgorithm : SearchAlgorithm {
 
 
     /*public void insertNode(SearchNode node){
-	for(int i=0;i<openList.Count;i++){
-	    if(node.f<openList[i].f){
-		openList.Insert(i,node);
-		return;
-	    }
+      for(int i=0;i<openList.Count;i++){
+      if(node.f<openList[i].f){
+      openList.Insert(i,node);
+      return;
+      }
 
-	}
-	openList.Add(node);
-    }*/
+      }
+      openList.Add(node);
+      }*/
 
 }

@@ -59,9 +59,12 @@ public class GreedySearch : SearchAlgorithm {
 				break;
 				
 				}
+			    case(5):
+				{				
+				    new_node= new SearchNode (suc.state, problem.ClosestDistanceHeuristic(suc.state), suc.action, cur_node);
+				    break;
+				}
 
-				
-			    
 			    }
 			    queue.Add(new_node.g,new_node);
 			}

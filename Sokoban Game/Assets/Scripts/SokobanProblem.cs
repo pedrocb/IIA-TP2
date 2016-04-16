@@ -171,7 +171,10 @@ public class SokobanProblem : ISearchProblem {
 		return remainingGoals;
     }
 
-    public float DistanceHeuristic(object state)
+	/******************************************************* 
+	  Soma das distâncias minimas de cada crate a um goal
+	********************************************************/
+    public float DistanceHeuristic(object state) 
     {
 		SokobanState s = (SokobanState)state;
 		float sum = 0;
@@ -190,8 +193,11 @@ public class SokobanProblem : ISearchProblem {
 		}
 		return sum;
     }
-    
-    public float DistanceToCrateClosestToGoal(object state)
+
+	/************************************************************
+	  Distância do player ao crate com menor distância de um goal
+	*************************************************************/
+    public float DistanceToCrateClosestToGoal(object state) //Distância do player ao crate mais 
     {
 		SokobanState s = (SokobanState)state;
 		float closestCrateToWinDistance = -1;
@@ -211,7 +217,11 @@ public class SokobanProblem : ISearchProblem {
 		return distanceTwoPoints(s.player.x,s.player.y,bestCrate.x,bestCrate.y);
 	
     }
-    
+	
+	
+    /************************************************************
+	  Igual a DistanceHeuristic mas sem contar com goals repetidos
+	*************************************************************/
     public float DistanceHeuristicBetter(object state){
 		SokobanState s = (SokobanState)state;
 		nCrates = s.crates.Count;
@@ -232,6 +242,30 @@ public class SokobanProblem : ISearchProblem {
 		}
 		return currentMin;	
     }
+	
+	public float ClosestDistanceHeuristic(object state){
+		SokobanState s = (SokobanState)state;
+		float minSum = -1;
+		float bestGoalDistance;
+		foreach (Vector2 crate in s.crates) {
+			bestGoalDistance = -1;
+			
+			foreach(Vector2 goal in goals){
+				if(!s.crates.Contains(goal) && !goals.Contains(crate)){
+					float distance = distanceTwoPoints (goal.x, goal.y, crate.x, crate.y); 
+					if (distance < bestGoalDistance || bestGoalDistance == -1) {
+						bestGoalDistance = distance;
+					}
+				}
+			}
+			float aux = distanceTwoPoints(s.player.x,s.player.y,crate.x,crate.y) + bestGoalDistance;
+			if(aux<minSum || minSum == -1){
+				minSum = aux;
+			}
+		}
+		return minSum;
+	}
+	
     
     public void recursive(int currentCrate){
 		if(currentCrate == nCrates){
