@@ -5,22 +5,21 @@ using System.Collections.Generic;
 public class AStarAlgorithm : SearchAlgorithm {
 
     public int heuristicNumber = 0;
-    private List<SearchNode> openList = new List<SearchNode> ();
+    //private List<SearchNode> openList = new List<SearchNode> ();
     private HashSet<object> closedSet = new HashSet<object> ();
-
+    private PriorityQueue<SearchNode> queue = new PriorityQueue<SearchNode>();
     void Start ()
     {
 	problem = GameObject.Find ("Map").GetComponent<Map> ().GetProblem();
 	SearchNode start = new SearchNode (problem.GetStartState (), 0);
-	openList.Add (start);
+	queue.Add(0,start);
     }
 
     protected override void Step()
     {
-	if (openList.Count > 0)
+	if (queue.Count > 0)
 	    {
-		SearchNode cur_node = openList[0];
-		openList.RemoveAt(0);
+		SearchNode cur_node = queue.RemoveMin();
 		closedSet.Add (cur_node.state);
 		
 		if (problem.IsGoal (cur_node.state)) {
@@ -32,7 +31,6 @@ public class AStarAlgorithm : SearchAlgorithm {
 		    foreach (Successor suc in sucessors) {
 			if (!closedSet.Contains (suc.state))
 			    {
-					    
 				SearchNode new_node = null;
 				switch (heuristicNumber) {
 				case(0):
@@ -64,7 +62,7 @@ public class AStarAlgorithm : SearchAlgorithm {
 					break;
 				    }
 				}
-				insertNode(new_node);
+				queue.Add(new_node.f,new_node);
 			    }
 		    }
 		}
@@ -77,7 +75,7 @@ public class AStarAlgorithm : SearchAlgorithm {
     }
 
 
-    public void insertNode(SearchNode node){
+    /*public void insertNode(SearchNode node){
 	for(int i=0;i<openList.Count;i++){
 	    if(node.f<openList[i].f){
 		openList.Insert(i,node);
@@ -86,6 +84,6 @@ public class AStarAlgorithm : SearchAlgorithm {
 
 	}
 	openList.Add(node);
-    }
+    }*/
 
 }

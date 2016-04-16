@@ -5,7 +5,6 @@ using System.Collections.Generic;
 public class GreedySearch : SearchAlgorithm {
 
     public int heuristicNumber = 0;
-    private List<SearchNode> openList = new List<SearchNode> ();
     private PriorityQueue<SearchNode> queue = new PriorityQueue<SearchNode>();
     private HashSet<object> closedSet = new HashSet<object> ();
     
@@ -75,7 +74,5 @@ public class GreedySearch : SearchAlgorithm {
 		finished = true;
 		running = false;
 	    }
-	
     }
 }
-    
