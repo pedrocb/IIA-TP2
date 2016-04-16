@@ -19,6 +19,7 @@ public class GreedySearch : SearchAlgorithm {
     {
 	if (openList.Count > 0)
 	    {
+			openList.Sort (compareFunction);
 		SearchNode cur_node = openList[0];
 		openList.RemoveAt(0);
 		closedSet.Add (cur_node.state);
@@ -61,7 +62,7 @@ public class GreedySearch : SearchAlgorithm {
 				}
 				
 			    }
-			    insertNode(new_node);
+				openList.Add (new_node);
 			}
 		    }
 		}
@@ -73,14 +74,26 @@ public class GreedySearch : SearchAlgorithm {
 	    }
     }
 
+	/*
     public void insertNode(SearchNode node){
 	for(int i=0;i<openList.Count;i++){
 	    if(node.g<=openList[i].g){
-		openList.Insert(i,node);
+			openList.Insert(i,node);
 		return;
 	    }
 	    
 	}
 	openList.Add(node);
     }
+	*/
+	
+	private static int compareFunction(SearchNode a, SearchNode b)
+	{
+		if (a.g >= b.g) {
+			return 1;
+		} else {
+			return -1;
+		}
+	}
+
 }
