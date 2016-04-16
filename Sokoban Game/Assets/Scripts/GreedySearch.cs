@@ -6,23 +6,24 @@ public class GreedySearch : SearchAlgorithm {
 
     public int heuristicNumber = 0;
     private List<SearchNode> openList = new List<SearchNode> ();
+    private PriorityQueue<SearchNode> queue = new PriorityQueue<SearchNode>();
     private HashSet<object> closedSet = new HashSet<object> ();
-
+    
     void Start ()
     {
 	problem = GameObject.Find ("Map").GetComponent<Map> ().GetProblem();
 	SearchNode start = new SearchNode (problem.GetStartState (), 0);
-	openList.Add (start);
+	queue.Add(0,start);
     }
 
     protected override void Step()
     {
-	if (openList.Count > 0)
+	if (queue.Count > 0)
 	    {
-		SearchNode cur_node = openList[0];
-		openList.RemoveAt(0);
+		SearchNode cur_node = queue.RemoveMin();
+		
 		closedSet.Add (cur_node.state);
-
+		
 		if (problem.IsGoal (cur_node.state)) {
 		    solution = cur_node;
 		    finished = true;
@@ -54,33 +55,27 @@ public class GreedySearch : SearchAlgorithm {
 				    break;
 				}
 			    case(4):
-				{
-				    
-				    new_node= new SearchNode (suc.state, problem.DistanceHeuristicBetter(suc.state), suc.action, cur_node);
-				    break;
-				}
+				{				
+				new_node= new SearchNode (suc.state, problem.DistanceHeuristicBetter(suc.state), suc.action, cur_node);
+				break;
 				
+				}
+
+				
+			    
 			    }
-			    insertNode(new_node);
+			    queue.Add(new_node.g,new_node);
 			}
 		    }
 		}
+		
 	    }
 	else
 	    {
 		finished = true;
 		running = false;
 	    }
-    }
-
-    public void insertNode(SearchNode node){
-	for(int i=0;i<openList.Count;i++){
-	    if(node.g<=openList[i].g){
-		openList.Insert(i,node);
-		return;
-	    }
-	    
-	}
-	openList.Add(node);
+	
     }
 }
+    
