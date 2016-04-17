@@ -32,7 +32,7 @@ public interface ISearchProblem
 
     float DistanceHeuristic (object state);
 
-    float DistanceHeuristicBetter (object state);
+    float DistanceHeuristic2 (object state);
 
     float PlayerBoxDistanceHeuristic(object state);
 

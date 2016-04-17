@@ -222,7 +222,7 @@ public class SokobanProblem : ISearchProblem {
     /************************************************************
 	  Igual a DistanceHeuristic mas sem contar com goals repetidos
 	*************************************************************/
-    public float DistanceHeuristicBetter(object state){
+    public float DistanceHeuristic2(object state){
 		SokobanState s = (SokobanState)state;
 		nCrates = s.crates.Count;
 		distances = new float[nCrates,nCrates];

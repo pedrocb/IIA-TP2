@@ -55,7 +55,7 @@ public class GreedySearch : SearchAlgorithm {
 				}
 			    case(4):
 				{
-				new_node= new SearchNode (suc.state, problem.DistanceHeuristicBetter(suc.state), suc.action, cur_node);
+				new_node= new SearchNode (suc.state, problem.DistanceHeuristic2(suc.state), suc.action, cur_node);
 				break;
 
 				}

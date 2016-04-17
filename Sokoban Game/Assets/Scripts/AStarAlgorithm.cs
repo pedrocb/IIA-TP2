@@ -58,7 +58,7 @@ public class AStarAlgorithm : SearchAlgorithm {
 				case(4):
 				    {
 
-					new_node= new SearchNode (suc.state, suc.cost + cur_node.g, problem.DistanceHeuristicBetter(suc.state), suc.action, cur_node);
+					new_node= new SearchNode (suc.state, suc.cost + cur_node.g, problem.DistanceHeuristic2(suc.state), suc.action, cur_node);
 					break;
 				    }
 				case(5):
