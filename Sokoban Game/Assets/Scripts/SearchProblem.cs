@@ -29,12 +29,12 @@ public interface ISearchProblem
     int GetExpanded ();
 
     float DistanceToCrateClosestToGoal(object state);
-	
+
     float DistanceHeuristic (object state);
 
     float DistanceHeuristicBetter (object state);
 
-    float MataLifeHeuristic(object state);
+    float PlayerBoxDistanceHeuristic(object state);
 
     float ClosestDistanceHeuristic(object state);
 }

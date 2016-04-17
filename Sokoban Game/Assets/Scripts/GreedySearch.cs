@@ -7,7 +7,7 @@ public class GreedySearch : SearchAlgorithm {
     public int heuristicNumber = 0;
     private PriorityQueue<SearchNode> queue = new PriorityQueue<SearchNode>();
     private HashSet<object> closedSet = new HashSet<object> ();
-    
+
     void Start ()
     {
 	problem = GameObject.Find ("Map").GetComponent<Map> ().GetProblem();
@@ -20,9 +20,9 @@ public class GreedySearch : SearchAlgorithm {
 	if (queue.Count > 0)
 	    {
 		SearchNode cur_node = queue.RemoveMin();
-		
+
 		closedSet.Add (cur_node.state);
-		
+
 		if (problem.IsGoal (cur_node.state)) {
 		    solution = cur_node;
 		    finished = true;
@@ -45,7 +45,7 @@ public class GreedySearch : SearchAlgorithm {
 				}
 			    case(2):
 				{
-				    new_node = new SearchNode (suc.state, problem.MataLifeHeuristic(suc.state), suc.action, cur_node);
+				    new_node = new SearchNode (suc.state, problem.PlayerBoxDistanceHeuristic(suc.state), suc.action, cur_node);
 				    break;
 				}
 			    case(3):
@@ -54,13 +54,13 @@ public class GreedySearch : SearchAlgorithm {
 				    break;
 				}
 			    case(4):
-				{				
+				{
 				new_node= new SearchNode (suc.state, problem.DistanceHeuristicBetter(suc.state), suc.action, cur_node);
 				break;
-				
+
 				}
 			    case(5):
-				{				
+				{
 				    new_node= new SearchNode (suc.state, problem.ClosestDistanceHeuristic(suc.state), suc.action, cur_node);
 				    break;
 				}
@@ -70,7 +70,7 @@ public class GreedySearch : SearchAlgorithm {
 			}
 		    }
 		}
-		
+
 	    }
 	else
 	    {

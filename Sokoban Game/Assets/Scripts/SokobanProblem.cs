@@ -20,7 +20,7 @@ public class SokobanState {
 		if (other != null) {
 			this.crates = new List<Vector2> (other.crates);
 			this.player = other.player;
-	    
+
 		}
     }
 
@@ -135,7 +135,7 @@ public class SokobanProblem : ISearchProblem {
     private int nCrates;
     private int visited = 0;
     private int expanded = 0;
-    
+
     public SokobanProblem(Map map)
     {
 		walls = map.GetWalls ();
@@ -144,7 +144,7 @@ public class SokobanProblem : ISearchProblem {
 		List<Vector2> crates_copy = new List<Vector2> (map.GetCrates ());
 		start_state = new SokobanState (crates_copy, map.GetPlayerStart());
     }
-    
+
     public object GetStartState()
     {
 		return start_state;
@@ -162,7 +162,7 @@ public class SokobanProblem : ISearchProblem {
     {
 		SokobanState s = (SokobanState)state;
 		int remainingGoals = goals.Count;
-		
+
 		foreach (Vector2 crate in s.crates) {
 			if (goals.Contains (crate)) {
 				remainingGoals--;
@@ -171,10 +171,10 @@ public class SokobanProblem : ISearchProblem {
 		return remainingGoals;
     }
 
-	/******************************************************* 
+	/*******************************************************
 	  Soma das distâncias minimas de cada crate a um goal
 	********************************************************/
-    public float DistanceHeuristic(object state) 
+    public float DistanceHeuristic(object state)
     {
 		SokobanState s = (SokobanState)state;
 		float sum = 0;
@@ -183,7 +183,7 @@ public class SokobanProblem : ISearchProblem {
 			float closestDistance = distanceTwoPoints (closestGoal.x, closestGoal.y, crate.x, crate.y);
 			foreach(Vector2 goal in goals)
 				{
-					float distance = distanceTwoPoints (goal.x, goal.y, crate.x, crate.y); 
+					float distance = distanceTwoPoints (goal.x, goal.y, crate.x, crate.y);
 					if (distance < closestDistance) {
 						closestDistance = distance;
 						closestGoal = goal;
@@ -197,28 +197,28 @@ public class SokobanProblem : ISearchProblem {
 	/************************************************************
 	  Distância do player ao crate com menor distância de um goal
 	*************************************************************/
-    public float DistanceToCrateClosestToGoal(object state) //Distância do player ao crate mais 
+    public float DistanceToCrateClosestToGoal(object state) //Distância do player ao crate mais
     {
 		SokobanState s = (SokobanState)state;
 		float closestCrateToWinDistance = -1;
-		Vector2 bestCrate = new Vector2(s.player.x,s.player.y);    
+		Vector2 bestCrate = new Vector2(s.player.x,s.player.y);
 		foreach (Vector2 crate in s.crates) {
 			foreach(Vector2 goal in goals){
 				if(!goals.Contains(crate)){
-					float distance = distanceTwoPoints (goal.x, goal.y, crate.x, crate.y); 
+					float distance = distanceTwoPoints (goal.x, goal.y, crate.x, crate.y);
 					if (distance < closestCrateToWinDistance || closestCrateToWinDistance == -1) {
 						closestCrateToWinDistance = distance;
 						bestCrate = crate;
 					}
-		    
+
 				}
 			}
 		}
 		return distanceTwoPoints(s.player.x,s.player.y,bestCrate.x,bestCrate.y);
-	
+
     }
-	
-	
+
+
     /************************************************************
 	  Igual a DistanceHeuristic mas sem contar com goals repetidos
 	*************************************************************/
@@ -240,19 +240,19 @@ public class SokobanProblem : ISearchProblem {
 			recursive(1);
 			goalsChecked[goal] = false;
 		}
-		return currentMin;	
+		return currentMin;
     }
-	
+
 	public float ClosestDistanceHeuristic(object state){
 		SokobanState s = (SokobanState)state;
 		float minSum = -1;
 		float bestGoalDistance;
 		foreach (Vector2 crate in s.crates) {
 			bestGoalDistance = -1;
-			
+
 			foreach(Vector2 goal in goals){
 				if(!s.crates.Contains(goal) && !goals.Contains(crate)){
-					float distance = distanceTwoPoints (goal.x, goal.y, crate.x, crate.y); 
+					float distance = distanceTwoPoints (goal.x, goal.y, crate.x, crate.y);
 					if (distance < bestGoalDistance || bestGoalDistance == -1) {
 						bestGoalDistance = distance;
 					}
@@ -265,8 +265,8 @@ public class SokobanProblem : ISearchProblem {
 		}
 		return minSum;
 	}
-	
-    
+
+
     public void recursive(int currentCrate){
 		if(currentCrate == nCrates){
 			float sum = 0;
@@ -291,14 +291,14 @@ public class SokobanProblem : ISearchProblem {
 		}
 		return;
     }
-	
-   
+
+
     public float distanceTwoPoints(float x1, float y1, float x2, float y2)
     {
 		return (Mathf.Sqrt(Mathf.Pow(x2-x1, 2) + Mathf.Pow(y2-y1, 2)));
     }
-    
-    public float MataLifeHeuristic(object state)
+
+    public float PlayerBoxDistanceHeuristic(object state)
     {
 		SokobanState s = (SokobanState)state;
 		float aux = 0;
@@ -309,37 +309,37 @@ public class SokobanProblem : ISearchProblem {
 			}
 		}
 		return aux;
-	
+
     }
-    
-    
-    
+
+
+
     public Successor[] GetSuccessors(object state)
     {
 		SokobanState s = (SokobanState)state;
-	
+
 		visited++;
 
 		List<Successor> result = new List<Successor> ();
-	
+
 		foreach (Action a in allActions) {
 			Vector2 movement = Actions.GetVector (a);
-	    
+
 			if (CheckRules(s, movement))
 				{
 					expanded++;
-		    
+
 					SokobanState new_state = new SokobanState (s);
-		    
+
 					new_state.player += movement;
-		    
+
 					for (int i = 0; i < new_state.crates.Count; i++) {
 						if (new_state.crates[i] == new_state.player) {
 							new_state.crates[i] += movement;
 							break;
 						}
 					}
-		    
+
 					result.Add (new Successor (new_state, 1f, a));
 				}
 		}
@@ -370,7 +370,7 @@ public class SokobanProblem : ISearchProblem {
 		int index = state.crates.IndexOf(new_pos);
 		if (index != -1) {
 			Vector2 new_crate_pos = state.crates [index] + movement;
-	    
+
 			if (walls [(int)new_crate_pos.y, (int)new_crate_pos.x]) {
 				return false;
 			}
@@ -382,7 +382,7 @@ public class SokobanProblem : ISearchProblem {
 				if(corners.Contains(new_crate_pos)){
 					return false;
 				}
-		
+
 			}
 		}
 		return true;
